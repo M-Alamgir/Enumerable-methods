@@ -1,26 +1,28 @@
 module Enumerable
   def my_each
+    a = *self
     return to_enum(:my_each) unless block_given?
     i = 0
-    length.times do
-      yield(self[i])
+    a.length.times do
+      yield(a[i])
       i += 1
     end
     self
   end
 
   def my_map(proc = nil)
+    a = *self
     return to_enum(:my_map) unless block_given? || !proc.nil?
     temp = []
     i = 0
     if proc.nil?
-      length.times do
-        temp.push(yield(self[i]))
+      a.length.times do
+        temp.push(yield(a[i]))
         i += 1
       end
     else
-      length.times do
-        temp.push(proc.call(self[i]))
+      a.length.times do
+        temp.push(proc.call(a[i]))
         i += 1
       end
     end
@@ -28,21 +30,23 @@ module Enumerable
   end
 
   def my_each_with_index
+    a = *self
     return to_enum(:my_each_with_index) unless block_given?
     i = 0
-    length.times do
-      yield(self[i], i)
+    a.length.times do
+      yield(a[i], i)
       i += 1
     end
     self
   end
 
   def my_select
+    a = *self
     return to_enum(:my_select) unless block_given?
     temp = []
     i = 0
-    length.times do
-      temp.push(self[i]) if yield(self[i])
+    a.length.times do
+      temp.push(a[i]) if yield(a[i])
       i += 1
     end
     temp
@@ -106,40 +110,42 @@ module Enumerable
   end
 
   def my_count(arg = nil)
+    a = *self
     i = 0
     count = 0
     if block_given?
-      length.times do
-        count += 1 if yield(self[i])
+      a.length.times do
+        count += 1 if yield(a[i])
         i += 1
       end
       return count
     else
       unless arg.nil?
-        length.times do
-          count += 1 if self[i] == arg
+        a.length.times do
+          count += 1 if a[i] == arg
           i += 1
         end
         return count
       end
-      length
+      a.length
     end
   end
 
   def my_inject(arg = nil)
+    a = *self
     raise LocalJumpError unless block_given?
     accumulator = arg
     if arg.nil?
-      accumulator = self[0]
+      accumulator = a[0]
       i = 1
-      (length - 1).times do
-        accumulator = yield(accumulator, self[i])
+      (a.length - 1).times do
+        accumulator = yield(accumulator, a[i])
         i += 1
       end
     else
       i = 0
-      length.times do
-        accumulator = yield(accumulator, self[i])
+      a.length.times do
+        accumulator = yield(accumulator, a[i])
         i += 1
       end
     end
@@ -150,7 +156,3 @@ end
 def multiply_els(arr)
   arr.my_inject { |multi, num| multi * num }
 end
-
-a = [2, 4, 6, 7, 8, 10, 10]
-map_proc = proc { |num| num + 1 }
-p a.my_map(map_proc)
