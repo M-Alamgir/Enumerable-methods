@@ -1,5 +1,6 @@
 module Enumerable
   def my_each
+    return to_enum(:my_each) unless block_given?
     i = 0
     length.times do
       yield(self[i])
@@ -9,6 +10,7 @@ module Enumerable
   end
 
   def my_map(proc = nil)
+    return to_enum(:my_map) unless block_given? || !proc.nil?
     temp = []
     i = 0
     if proc.nil?
@@ -26,6 +28,7 @@ module Enumerable
   end
 
   def my_each_with_index
+    return to_enum(:my_each_with_index) unless block_given?
     i = 0
     length.times do
       yield(self[i], i)
@@ -35,6 +38,7 @@ module Enumerable
   end
 
   def my_select
+    return to_enum(:my_select) unless block_given?
     temp = []
     i = 0
     length.times do
@@ -44,50 +48,86 @@ module Enumerable
     temp
   end
 
-  def my_all?
+  def my_all?(arg = nil)
     i = 0
-    length.times do
-      return false unless yield(self[i])
+    if block_given?
+      length.times do
+        return false unless yield(self[i])
 
-      i += 1
+        i += 1
+      end
+      true
+    else
+      length.times do
+        return false unless self[i]
+
+        i += 1
+      end
+      true
     end
-    true
   end
 
   def my_any?
     i = 0
-    length.times do
-      return true if yield(self[i])
+    if block_given?
+      length.times do
+        return true if yield(self[i])
 
-      i += 1
+        i += 1
+      end
+      false
+    else
+      length.times do
+        return true if self[i]
+
+        i += 1
+      end
+      false
     end
-    false
   end
 
   def my_none?
     i = 0
-    length.times do
-      return false if yield(self[i])
+    if block_given?
+      length.times do
+        return false if yield(self[i])
 
-      i += 1
+        i += 1
+      end
+      true
+    else
+      length.times do
+        return false if self[i]
+
+        i += 1
+      end
+      true
     end
-    true
   end
 
   def my_count(arg = nil)
-    unless arg.nil?
-      i = 0
-      count = 0
+    i = 0
+    count = 0
+    if block_given?
       length.times do
-        count += 1 if self[i] == arg
+        count += 1 if yield(self[i])
         i += 1
       end
       return count
+    else
+      unless arg.nil?
+        length.times do
+          count += 1 if self[i] == arg
+          i += 1
+        end
+        return count
+      end
+      length
     end
-    length
   end
 
   def my_inject(arg = nil)
+    raise LocalJumpError unless block_given?
     accumulator = arg
     if arg.nil?
       accumulator = self[0]
