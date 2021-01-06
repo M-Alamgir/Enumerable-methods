@@ -11,7 +11,7 @@ module Enumerable
   def my_map(proc = nil)
     temp = []
     i = 0
-    if(proc.nil?)
+    if proc.nil?
       length.times do
         temp.push(yield(self[i]))
         i += 1
@@ -48,6 +48,7 @@ module Enumerable
     i = 0
     length.times do
       return false unless yield(self[i])
+
       i += 1
     end
     true
@@ -57,6 +58,7 @@ module Enumerable
     i = 0
     length.times do
       return true if yield(self[i])
+
       i += 1
     end
     false
@@ -66,13 +68,14 @@ module Enumerable
     i = 0
     length.times do
       return false if yield(self[i])
+
       i += 1
     end
     true
   end
 
   def my_count(arg = nil)
-    if !arg.nil?
+    unless arg.nil?
       i = 0
       count = 0
       length.times do
@@ -111,4 +114,3 @@ end
 a = [2, 4, 6, 7, 8, 10, 10]
 map_proc = proc { |num| num + 1 }
 p a.my_map(map_proc)
-p a.my_inject {|sum, num| sum + num}
