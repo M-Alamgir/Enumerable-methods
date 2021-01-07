@@ -218,17 +218,13 @@ module Enumerable
     elsif arg[1].is_a? Symbol
       accumulator = arg[0]
       pr = arg[1].to_proc
-      i = 0
-      a.length.times do
-        accumulator = pr.call(accumulator, a[i])
-        i += 1
+      a.my_each do |element|
+        accumulator = pr.call(accumulator, element)
       end
     elsif block_given?
       accumulator = arg[0]
-      i = 0
-      a.length.times do
-        accumulator = !accumulator ? a[i] : yield(accumulator, a[i])
-      i += 1
+      a.my_each do |element|
+        accumulator = !accumulator ? element : yield(accumulator, element)
       end
     else
       raise LocalJumpError unless block_given?
@@ -242,5 +238,4 @@ def multiply_els(arr)
 end
 
 arr = [1, 2]
-
-p arr.my_all? {|num| num > 0}
+p arr.my_inject(10, :+)
