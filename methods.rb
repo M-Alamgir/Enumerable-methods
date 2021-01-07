@@ -131,21 +131,40 @@ module Enumerable
     end
   end
 
-  def my_inject(arg = nil)
+  def my_inject(*arg)
     a = *self
-    raise LocalJumpError unless block_given?
-    accumulator = arg
-    if arg.nil?
+    if arg.size == 0
+      raise LocalJumpError unless block_given?
       accumulator = a[0]
       i = 1
       (a.length - 1).times do
         accumulator = yield(accumulator, a[i])
         i += 1
       end
-    else
+    elsif arg.size == 1
+      if arg[0].is_a? Symbol
+        pr = arg[0].to_proc
+        accumulator = a[0]
+        i = 1
+        (a.length - 1).times do
+          accumulator = pr.call(accumulator, a[i])
+          i += 1
+        end
+      else
+        raise LocalJumpError unless block_given?
+        accumulator = arg[0]
+        i = 0
+        a.length.times do
+          accumulator = yield(accumulator, a[i])
+          i += 1
+        end
+      end
+    elsif arg.size == 2
+      accumulator = arg[0]
+      pr = arg[1].to_proc
       i = 0
       a.length.times do
-        accumulator = yield(accumulator, a[i])
+        accumulator = pr.call(accumulator, a[i])
         i += 1
       end
     end
@@ -156,3 +175,5 @@ end
 def multiply_els(arr)
   arr.my_inject { |multi, num| multi * num }
 end
+
+arr = [1, 2, 3, 4, 5]
