@@ -58,13 +58,13 @@ module Enumerable
       if block_given?
         length.times do
           return false unless yield(self[i])
-  
+
           i += 1
         end
       else
         length.times do
           return false unless self[i]
-  
+
           i += 1
         end
       end
@@ -72,41 +72,41 @@ module Enumerable
       if arg[0].is_a?(Class)
         length.times do
           return false unless self[i].is_a?(arg[0])
-  
+
           i += 1
         end
       elsif arg[0].is_a?(Regexp)
         length.times do
           return false unless self[i] =~ arg[0]
-  
+
           i += 1
         end
       else
         length.times do
           return false unless self[i] == arg[0]
-  
+
           i += 1
         end
       end
     else
-      raise ArgumentError.new("given #{arg.size}, expected 0..1")
+      puts "given #{arg.size}, expected 0..1"
     end
     true
   end
 
-  def my_any? (*arg)
+  def my_any?(*arg)
     i = 0
     if arg.size == 0
       if block_given?
         length.times do
           return true if yield(self[i])
-  
+
           i += 1
         end
       else
         length.times do
           return true if self[i]
-  
+
           i += 1
         end
       end
@@ -114,41 +114,41 @@ module Enumerable
       if arg[0].is_a?(Class)
         length.times do
           return true if self[i].is_a?(arg[0])
-  
+
           i += 1
         end
       elsif arg[0].is_a?(Regexp)
         length.times do
           return true if self[i] =~ arg[0]
-  
+
           i += 1
         end
       else
         length.times do
           return true if self[i] == arg[0]
-  
+
           i += 1
         end
       end
     else
-      raise ArgumentError.new("given #{arg.size}, expected 0..1")
+      puts "given #{arg.size}, expected 0..1"
     end
     false
   end
 
-  def my_none? (*arg)
+  def my_none?(*arg)
     i = 0
-    if arg == 0
+    if arg.empty?
       if block_given?
         length.times do
           return false if yield(self[i])
-  
+
           i += 1
         end
       else
         length.times do
           return false if self[i]
-  
+
           i += 1
         end
       end
@@ -156,24 +156,24 @@ module Enumerable
       if arg[0].is_a?(Class)
         length.times do
           return false if self[i].is_a?(arg[0])
-  
+
           i += 1
         end
       elsif arg[0].is_a?(Regexp)
         length.times do
           return false if self[i] =~ arg[0]
-  
+
           i += 1
         end
       else
         length.times do
           return false if self[i] == arg[0]
-  
+
           i += 1
         end
       end
     else
-      raise ArgumentError.new("given #{arg.size}, expected 0..1")
+      puts "given #{arg.size}, expected 0..1"
     end
     true
   end
@@ -187,7 +187,7 @@ module Enumerable
         count += 1 if yield(a[i])
         i += 1
       end
-      return count
+      count
     else
       unless arg.nil?
         a.length.times do
@@ -200,58 +200,47 @@ module Enumerable
     end
   end
 
-  def loops(arr, exp, acc, index = 0)
-    i = index
-    (arr.length - index).times do
-      acc = exp
-      i += 1
-    end
-  end
-
   def my_inject(*arg)
     a = *self
-    if arg.size.empty?
+
+    if arg.empty?
       raise LocalJumpError unless block_given?
 
       accumulator = a[0]
-      # i = 1
-      # (a.length - 1).times do
-      #   accumulator = yield(accumulator, a[i])
-      #   i += 1
-      # end
-      loops(a, yield(accumulator, a[i]), accumulator, 1)
+      i = 1
+      (a.length - 1).times do
+        accumulator = yield(accumulator, a[i])
+        i += 1
+      end
     elsif arg.size == 1
       if arg[0].is_a? Symbol
         pr = arg[0].to_proc
         accumulator = a[0]
-        # i = 1
-        # (a.length - 1).times do
-        #   accumulator = pr.call(accumulator, a[i])
-        #   i += 1
-        # end
-        loops(a, pr.call(accumulator, a[i]), accumulator, 1)
+        i = 1
+        (a.length - 1).times do
+          accumulator = pr.call(accumulator, a[i])
+          i += 1
+        end
       else
         raise LocalJumpError unless block_given?
 
         accumulator = arg[0]
-        # i = 0
-        # a.length.times do
-        #   accumulator = yield(accumulator, a[i])
-        #   i += 1
-        # end
-        loops(a, pr.call(accumulator, a[i]), accumulator)
+        i = 0
+        a.length.times do
+          accumulator = yield(accumulator, a[i])
+          i += 1
+        end
       end
     elsif arg.size == 2
       accumulator = arg[0]
       pr = arg[1].to_proc
-      # i = 0
-      # a.length.times do
-      #   accumulator = pr.call(accumulator, a[i])
-      #   i += 1
-      # end
-      loops(a, pr.call(accumulator, a[i]), accumulator)
+      i = 0
+      a.length.times do
+        accumulator = pr.call(accumulator, a[i])
+        i += 1
+      end
     else
-      raise ArgumentError.new("given #{arg.size}, expected 0..2")
+      puts "given #{arg.size}, expected 0..2"
     end
     accumulator
   end
@@ -263,4 +252,4 @@ end
 
 arr = [1, 2]
 
-p arr.my_inject { |sum, num| sum + num}
+p arr.my_inject(0)
