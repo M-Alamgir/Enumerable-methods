@@ -3,10 +3,10 @@ name: Linters
 on: pull_request
 
 Metrics/MethodLength:
-  Max: 40
+  Enabled: false
 
 Metrics/ModuleLength:
-  Max: 300
+  Enabled: false
 
 Metrics/CyclomaticComplexity: disable
 
