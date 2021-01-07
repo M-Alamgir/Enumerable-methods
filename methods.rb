@@ -200,42 +200,56 @@ module Enumerable
     end
   end
 
+  def loops(arr, exp, acc, index = 0)
+    i = index
+    (arr.length - index).times do
+      acc = exp
+      i += 1
+    end
+  end
+
   def my_inject(*arg)
     a = *self
-    if arg.size == 0
+    if arg.size.empty?
       raise LocalJumpError unless block_given?
+
       accumulator = a[0]
-      i = 1
-      (a.length - 1).times do
-        accumulator = yield(accumulator, a[i])
-        i += 1
-      end
+      # i = 1
+      # (a.length - 1).times do
+      #   accumulator = yield(accumulator, a[i])
+      #   i += 1
+      # end
+      loops(a, yield(accumulator, a[i]), accumulator, 1)
     elsif arg.size == 1
       if arg[0].is_a? Symbol
         pr = arg[0].to_proc
         accumulator = a[0]
-        i = 1
-        (a.length - 1).times do
-          accumulator = pr.call(accumulator, a[i])
-          i += 1
-        end
+        # i = 1
+        # (a.length - 1).times do
+        #   accumulator = pr.call(accumulator, a[i])
+        #   i += 1
+        # end
+        loops(a, pr.call(accumulator, a[i]), accumulator, 1)
       else
         raise LocalJumpError unless block_given?
+
         accumulator = arg[0]
-        i = 0
-        a.length.times do
-          accumulator = yield(accumulator, a[i])
-          i += 1
-        end
+        # i = 0
+        # a.length.times do
+        #   accumulator = yield(accumulator, a[i])
+        #   i += 1
+        # end
+        loops(a, pr.call(accumulator, a[i]), accumulator)
       end
     elsif arg.size == 2
       accumulator = arg[0]
       pr = arg[1].to_proc
-      i = 0
-      a.length.times do
-        accumulator = pr.call(accumulator, a[i])
-        i += 1
-      end
+      # i = 0
+      # a.length.times do
+      #   accumulator = pr.call(accumulator, a[i])
+      #   i += 1
+      # end
+      loops(a, pr.call(accumulator, a[i]), accumulator)
     else
       raise ArgumentError.new("given #{arg.size}, expected 0..2")
     end
@@ -249,5 +263,4 @@ end
 
 arr = [1, 2]
 
-p arr.my_all?(1, 2, 4, 6, 765, 3)
-
+p arr.my_inject { |sum, num| sum + num}
