@@ -58,125 +58,111 @@ module Enumerable
 
   def my_all?(*arg)
     i = 0
-    if arg.empty?
-      if block_given?
-        length.times do
-          return false unless yield(self[i])
-          i += 1
-        end
-      else
-        length.times do
-          return false unless self[i]
+    return puts "given #{arg.size}, expected 0..1" if arg.size > 1
 
-          i += 1
-        end
+    if arg[0].is_a? Class
+      length.times do
+        return false unless self[i].is_a?(arg[0])
+
+        i += 1
       end
-    elsif arg.size == 1
-      if arg[0].is_a?(Class)
-        length.times do
-          return false unless self[i].is_a?(arg[0])
+    elsif arg[0].is_a? Regexp
+      length.times do
+        return false unless self[i] =~ arg[0]
 
-          i += 1
-        end
-      elsif arg[0].is_a?(Regexp)
-        length.times do
-          return false unless self[i] =~ arg[0]
+        i += 1
+      end
+    elsif arg[0]
+      length.times do
+        return false unless self[i] == arg[0]
 
-          i += 1
-        end
-      else
-        length.times do
-          return false unless self[i] == arg[0]
-
-          i += 1
-        end
+        i += 1
+      end
+    elsif block_given?
+      length.times do
+        return false unless yield(self[i])
+        i += 1
       end
     else
-      puts "given #{arg.size}, expected 0..1"
+      length.times do
+        return false unless self[i]
+
+        i += 1
+      end
     end
     true
   end
 
   def my_any?(*arg)
     i = 0
-    if arg.empty?
-      if block_given?
-        length.times do
-          return true if yield(self[i])
+    return puts "given #{arg.size}, expected 0..1" if arg.size > 1
 
-          i += 1
-        end
-      else
-        length.times do
-          return true if self[i]
+    if arg[0].is_a? Class
+      length.times do
+        return true if self[i].is_a?(arg[0])
 
-          i += 1
-        end
+        i += 1
       end
-    elsif arg.size == 1
-      if arg[0].is_a?(Class)
-        length.times do
-          return true if self[i].is_a?(arg[0])
+    elsif arg[0].is_a? Regexp
+      length.times do
+        return true if self[i] =~ arg[0]
 
-          i += 1
-        end
-      elsif arg[0].is_a?(Regexp)
-        length.times do
-          return true if self[i] =~ arg[0]
+        i += 1
+      end
+    elsif arg[0]
+      length.times do
+        return true if self[i] == arg[0]
 
-          i += 1
-        end
-      else
-        length.times do
-          return true if self[i] == arg[0]
-
-          i += 1
-        end
+        i += 1
+      end
+    elsif block_given?
+      length.times do
+        return true if yield(self[i])
+        i += 1
       end
     else
-      puts "given #{arg.size}, expected 0..1"
+      length.times do
+        return true if self[i]
+
+        i += 1
+      end
     end
     false
   end
 
   def my_none?(*arg)
     i = 0
-    if arg.empty?
-      if block_given?
-        length.times do
-          return false if yield(self[i])
+    return puts "given #{arg.size}, expected 0..1" if arg.size > 1
+    
+    if arg[0].is_a? Class
+      length.times do
+        return false if self[i].is_a?(arg[0])
 
-          i += 1
-        end
-      else
-        length.times do
-          return false if self[i]
-
-          i += 1
-        end
+        i += 1
       end
-    elsif arg == 1
-      if arg[0].is_a?(Class)
-        length.times do
-          return false if self[i].is_a?(arg[0])
+    elsif arg[0].is_a? Regexp
+      length.times do
+        return false if self[i] =~ arg[0]
 
-          i += 1
-        end
-      elsif arg[0].is_a?(Regexp)
-        length.times do
-          return false if self[i] =~ arg[0]
+        i += 1
+      end
+    elsif arg[0]
+      length.times do
+        return false if self[i] == arg[0]
 
-          i += 1
-        end
-      else
-        length.times do
-          return false if self[i] == arg[0]
-
-          i += 1
-        end
+        i += 1
+      end
+    elsif block_given?
+      length.times do
+        return false if yield(self[i])
+        i += 1
       end
     else
-      puts "given #{arg.size}, expected 0..1"
+      length.times do
+        return false if self[i]
+
+        i += 1
+      end
     end
     true
   end
