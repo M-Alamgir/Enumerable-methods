@@ -2,6 +2,7 @@ module Enumerable
   def my_each
     a = *self
     return to_enum(:my_each) unless block_given?
+    
     i = 0
     a.length.times do
       yield(a[i])
@@ -13,6 +14,7 @@ module Enumerable
   def my_map(proc = nil)
     a = *self
     return to_enum(:my_map) unless block_given? || !proc.nil?
+
     temp = []
     i = 0
     if proc.nil?
@@ -32,6 +34,7 @@ module Enumerable
   def my_each_with_index
     a = *self
     return to_enum(:my_each_with_index) unless block_given?
+
     i = 0
     a.length.times do
       yield(a[i], i)
@@ -43,6 +46,7 @@ module Enumerable
   def my_select
     a = *self
     return to_enum(:my_select) unless block_given?
+
     temp = []
     i = 0
     a.length.times do
@@ -54,7 +58,7 @@ module Enumerable
 
   def my_all?(*arg)
     i = 0
-    if arg.size == 0
+    if arg.empty?
       if block_given?
         length.times do
           return false unless yield(self[i])
@@ -96,7 +100,7 @@ module Enumerable
 
   def my_any?(*arg)
     i = 0
-    if arg.size == 0
+    if arg.empty?
       if block_given?
         length.times do
           return true if yield(self[i])
