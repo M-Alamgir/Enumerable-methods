@@ -52,78 +52,130 @@ module Enumerable
     temp
   end
 
-  def my_all?(arg = nil)
+  def my_all?(*arg)
     i = 0
-    if block_given?
-      length.times do
-        return false unless yield(self[i])
-
-        i += 1
+    if arg.size == 0
+      if block_given?
+        length.times do
+          return false unless yield(self[i])
+  
+          i += 1
+        end
+      else
+        length.times do
+          return false unless self[i]
+  
+          i += 1
+        end
       end
-    elsif arg.is_a?(Class)
-      length.times do
-        return false unless self[i].is_a?(arg)
-
-        i += 1
-      end
-    elsif arg.is_a?(Regexp)
-      length.times do
-        return false unless self[i] =~ arg
-
-        i += 1
-      end
-    elsif arg != nil
-      length.times do
-        return false unless self[i] == arg
-
-        i += 1
+    elsif arg.size == 1
+      if arg[0].is_a?(Class)
+        length.times do
+          return false unless self[i].is_a?(arg[0])
+  
+          i += 1
+        end
+      elsif arg[0].is_a?(Regexp)
+        length.times do
+          return false unless self[i] =~ arg[0]
+  
+          i += 1
+        end
+      else
+        length.times do
+          return false unless self[i] == arg[0]
+  
+          i += 1
+        end
       end
     else
-      length.times do
-        return false unless self[i]
-
-        i += 1
-      end
+      raise ArgumentError.new("given #{arg.size}, expected 0..1")
     end
     true
   end
 
-  def my_any?
+  def my_any? (*arg)
     i = 0
-    if block_given?
-      length.times do
-        return true if yield(self[i])
-
-        i += 1
+    if arg.size == 0
+      if block_given?
+        length.times do
+          return true if yield(self[i])
+  
+          i += 1
+        end
+      else
+        length.times do
+          return true if self[i]
+  
+          i += 1
+        end
       end
-      false
+    elsif arg.size == 1
+      if arg[0].is_a?(Class)
+        length.times do
+          return true if self[i].is_a?(arg[0])
+  
+          i += 1
+        end
+      elsif arg[0].is_a?(Regexp)
+        length.times do
+          return true if self[i] =~ arg[0]
+  
+          i += 1
+        end
+      else
+        length.times do
+          return true if self[i] == arg[0]
+  
+          i += 1
+        end
+      end
     else
-      length.times do
-        return true if self[i]
-
-        i += 1
-      end
-      false
+      raise ArgumentError.new("given #{arg.size}, expected 0..1")
     end
+    false
   end
 
-  def my_none?
+  def my_none? (*arg)
     i = 0
-    if block_given?
-      length.times do
-        return false if yield(self[i])
-
-        i += 1
+    if arg == 0
+      if block_given?
+        length.times do
+          return false if yield(self[i])
+  
+          i += 1
+        end
+      else
+        length.times do
+          return false if self[i]
+  
+          i += 1
+        end
       end
-      true
+    elsif arg == 1
+      if arg[0].is_a?(Class)
+        length.times do
+          return false if self[i].is_a?(arg[0])
+  
+          i += 1
+        end
+      elsif arg[0].is_a?(Regexp)
+        length.times do
+          return false if self[i] =~ arg[0]
+  
+          i += 1
+        end
+      else
+        length.times do
+          return false if self[i] == arg[0]
+  
+          i += 1
+        end
+      end
     else
-      length.times do
-        return false if self[i]
-
-        i += 1
-      end
-      true
+      raise ArgumentError.new("given #{arg.size}, expected 0..1")
     end
+    true
   end
 
   def my_count(arg = nil)
@@ -184,6 +236,8 @@ module Enumerable
         accumulator = pr.call(accumulator, a[i])
         i += 1
       end
+    else
+      raise ArgumentError.new("given #{arg.size}, expected 0..2")
     end
     accumulator
   end
@@ -193,7 +247,7 @@ def multiply_els(arr)
   arr.my_inject { |multi, num| multi * num }
 end
 
-arr = []
+arr = [1, 2]
 
-p arr.my_all?()
+p arr.my_all?(1, 2, 4, 6, 765, 3)
 
