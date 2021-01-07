@@ -1,3 +1,4 @@
+# rubocop:disable MethodLength
 module Enumerable
   def my_each
     a = *self
@@ -81,6 +82,7 @@ module Enumerable
     elsif block_given?
       length.times do
         return false unless yield(self[i])
+
         i += 1
       end
     else
@@ -92,6 +94,10 @@ module Enumerable
     end
     true
   end
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable MethodLength
 
   def my_any?(*arg)
     i = 0
@@ -118,6 +124,7 @@ module Enumerable
     elsif block_given?
       length.times do
         return true if yield(self[i])
+        
         i += 1
       end
     else
@@ -167,6 +174,10 @@ module Enumerable
     true
   end
 
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable MethodLength
+
   def my_count(arg = nil)
     a = *self
     i = 0
@@ -189,6 +200,9 @@ module Enumerable
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable MethodLength
   def my_inject(*arg)
     a = *self
     return puts "given #{arg.size}, expected 0..2" if arg.size > 2
@@ -217,6 +231,9 @@ module Enumerable
     end
     accumulator
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable MethodLength
 end
 
 def multiply_els(arr)
@@ -225,3 +242,4 @@ end
 
 arr = [1, 2]
 p arr.my_inject(10, :+)
+# rubocop:enable MethodLength
