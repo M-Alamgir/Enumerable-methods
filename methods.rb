@@ -60,15 +60,32 @@ module Enumerable
 
         i += 1
       end
-      true
+    elsif arg.is_a?(Class)
+      length.times do
+        return false unless self[i].is_a?(arg)
+
+        i += 1
+      end
+    elsif arg.is_a?(Regexp)
+      length.times do
+        return false unless self[i] =~ arg
+
+        i += 1
+      end
+    elsif arg != nil
+      length.times do
+        return false unless self[i] == arg
+
+        i += 1
+      end
     else
       length.times do
         return false unless self[i]
 
         i += 1
       end
-      true
     end
+    true
   end
 
   def my_any?
@@ -176,4 +193,7 @@ def multiply_els(arr)
   arr.my_inject { |multi, num| multi * num }
 end
 
-arr = [1, 2, 3, 4, 5]
+arr = []
+
+p arr.my_all?()
+
