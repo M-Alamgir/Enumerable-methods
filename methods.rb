@@ -2,7 +2,7 @@ module Enumerable
   def my_each
     a = *self
     return to_enum(:my_each) unless block_given?
-    
+
     i = 0
     a.length.times do
       yield(a[i])
@@ -62,7 +62,6 @@ module Enumerable
       if block_given?
         length.times do
           return false unless yield(self[i])
-
           i += 1
         end
       else
@@ -206,36 +205,17 @@ module Enumerable
 
   def my_inject(*arg)
     a = *self
+    return puts "given #{arg.size}, expected 0..2" if arg.size > 2
 
-    if arg.empty?
-      raise LocalJumpError unless block_given?
-
+    if arg[0].is_a? Symbol
+      pr = arg[0].to_proc
       accumulator = a[0]
       i = 1
       (a.length - 1).times do
-        accumulator = yield(accumulator, a[i])
+        accumulator = pr.call(accumulator, a[i])
         i += 1
       end
-    elsif arg.size == 1
-      if arg[0].is_a? Symbol
-        pr = arg[0].to_proc
-        accumulator = a[0]
-        i = 1
-        (a.length - 1).times do
-          accumulator = pr.call(accumulator, a[i])
-          i += 1
-        end
-      else
-        raise LocalJumpError unless block_given?
-
-        accumulator = arg[0]
-        i = 0
-        a.length.times do
-          accumulator = yield(accumulator, a[i])
-          i += 1
-        end
-      end
-    elsif arg.size == 2
+    elsif arg[1].is_a? Symbol
       accumulator = arg[0]
       pr = arg[1].to_proc
       i = 0
@@ -243,8 +223,15 @@ module Enumerable
         accumulator = pr.call(accumulator, a[i])
         i += 1
       end
+    elsif block_given?
+      accumulator = arg[0]
+      i = 0
+      a.length.times do
+        accumulator = !accumulator ? a[i] : yield(accumulator, a[i])
+      i += 1
+      end
     else
-      puts "given #{arg.size}, expected 0..2"
+      raise LocalJumpError unless block_given?
     end
     accumulator
   end
@@ -256,4 +243,4 @@ end
 
 arr = [1, 2]
 
-p arr.my_inject(0)
+p arr.my_all? {|num| num > 0}
