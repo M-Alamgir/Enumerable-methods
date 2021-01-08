@@ -244,6 +244,3 @@ end
 def multiply_els(arr)
   arr.my_inject { |multi, num| multi * num }
 end
-
-arr = [1, 2, 3]
-p (1..3).my_all?(Numeric)
