@@ -62,36 +62,37 @@ module Enumerable
   # rubocop:disable Metrics/MethodLength
 
   def my_all?(*arg)
+    a = *self
     i = 0
     return puts "given #{arg.size}, expected 0..1" if arg.size > 1
 
     if arg[0].is_a? Class
-      length.times do
-        return false unless self[i].is_a?(arg[0])
+      a.length.times do
+        return false unless a[i].is_a?(arg[0])
 
         i += 1
       end
     elsif arg[0].is_a? Regexp
-      length.times do
-        return false unless self[i] =~ arg[0]
+      a.length.times do
+        return false unless a[i] =~ arg[0]
 
         i += 1
       end
-    elsif arg[0]
-      length.times do
-        return false unless self[i] == arg[0]
+    elsif arg.size == 1
+      a.length.times do
+        return false unless a[i] == arg[0]
 
         i += 1
       end
     elsif block_given?
-      length.times do
-        return false unless yield(self[i])
+      a.length.times do
+        return false unless yield(a[i])
 
         i += 1
       end
     else
-      length.times do
-        return false unless self[i]
+      a.length.times do
+        return false unless a[i]
 
         i += 1
       end
@@ -100,36 +101,37 @@ module Enumerable
   end
 
   def my_any?(*arg)
+    a = *self
     i = 0
     return puts "given #{arg.size}, expected 0..1" if arg.size > 1
 
     if arg[0].is_a? Class
-      length.times do
-        return true if self[i].is_a?(arg[0])
+      a.length.times do
+        return true if a[i].is_a?(arg[0])
 
         i += 1
       end
     elsif arg[0].is_a? Regexp
-      length.times do
-        return true if self[i] =~ arg[0]
+      a.length.times do
+        return true if a[i] =~ arg[0]
 
         i += 1
       end
-    elsif arg[0]
-      length.times do
-        return true if self[i] == arg[0]
+    elsif arg.size == 1
+      a.length.times do
+        return true if a[i] == arg[0]
 
         i += 1
       end
     elsif block_given?
-      length.times do
-        return true if yield(self[i])
+      a.length.times do
+        return true if yield(a[i])
 
         i += 1
       end
     else
-      length.times do
-        return true if self[i]
+      a.length.times do
+        return true if a[i]
 
         i += 1
       end
@@ -138,36 +140,37 @@ module Enumerable
   end
 
   def my_none?(*arg)
+    a = *self
     i = 0
     return puts "given #{arg.size}, expected 0..1" if arg.size > 1
 
     if arg[0].is_a? Class
-      length.times do
-        return false if self[i].is_a?(arg[0])
+      a.length.times do
+        return false if a[i].is_a?(arg[0])
 
         i += 1
       end
     elsif arg[0].is_a? Regexp
-      length.times do
-        return false if self[i] =~ arg[0]
+      a.length.times do
+        return false if a[i] =~ arg[0]
 
         i += 1
       end
-    elsif arg[0]
-      length.times do
-        return false if self[i] == arg[0]
+    elsif arg.size == 1
+      a.length.times do
+        return false if a[i] == arg[0]
 
         i += 1
       end
     elsif block_given?
-      length.times do
-        return false if yield(self[i])
+      a.length.times do
+        return false if yield(a[i])
 
         i += 1
       end
     else
-      length.times do
-        return false if self[i]
+      a.length.times do
+        return false if a[i]
 
         i += 1
       end
@@ -242,5 +245,5 @@ def multiply_els(arr)
   arr.my_inject { |multi, num| multi * num }
 end
 
-arr = [1, 2]
-p arr.my_inject(10, :+)
+arr = [1, 2, 3]
+p (1..3).my_all?(Numeric)
