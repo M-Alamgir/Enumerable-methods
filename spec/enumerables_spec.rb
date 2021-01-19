@@ -158,7 +158,7 @@ describe Enumerable do
     it 'returns the longest string' do
       expect(%w[cat mouse elephant dog].my_inject{ |acc, word| acc.length > word.length ? acc : word }).to eql('elephant')
     end
-    it 'raises a LoaclJump error if no block or symbol is given' do
+    it 'raises a LocalJump error if no block or symbol is given' do
       expect{ arr.my_inject }.to raise_error(LocalJumpError)
     end
   end
