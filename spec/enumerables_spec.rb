@@ -138,4 +138,28 @@ describe Enumerable do
       expect([1, 1, 2, 3, 5, 7, 1].my_count(1)).to eql(3)
     end
   end
+
+  describe '#my_inject' do
+    it 'returns the result of the mathematical operation passed to the argument as a symbol' do
+      expect((5..10).my_inject(:+)).to eql(45)
+    end
+    it 'returns the result of the mathematical operation passed to the argument as a symbol' do
+      expect(arr.my_inject(:*)).to eql(6)
+    end
+    it 'returns the result of the mathematical operation passed to the argument as a symbol using an initial value for accumulator' do
+      expect((5..10).my_inject(10, :+)).to eql(55)
+    end
+    it 'returns the result of the mathematical operation passed as a block' do
+      expect((1..5).my_inject{|acc, num| acc + num}).to eql(15)
+    end
+    it 'returns the result of the mathematical operation passed as a block while using an initial value for accumulator' do
+      expect((1..5).my_inject(10){|acc, num| acc + num}).to eql(25)
+    end
+    it 'returns the longest string' do
+      expect(%w[cat mouse elephant dog].my_inject{|acc, word| acc.length > word.length ? acc : word}).to eql('elephant')
+    end
+    it 'raises a LoaclJump error if no block or symbol is given' do
+      expect{arr.my_inject}.to raise_error(LocalJumpError)
+    end
+  end
 end
