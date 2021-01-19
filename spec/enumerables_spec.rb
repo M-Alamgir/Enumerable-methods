@@ -123,4 +123,19 @@ describe Enumerable do
       expect(arr.my_select.is_a?(Enumerator)).to eql(true)
     end
   end
+
+  describe '#my_count' do
+    it 'counts the elements of an array if no block is given' do
+      expect(arr.my_count).to eql(3)
+    end
+    it 'counts the elements that are true to the block' do
+      expect(arr.my_count{|num| num > 1}).to eql(2)
+    end
+    it 'returns 0 if no elements are true to the block' do
+      expect(arr.my_count{|num| num > 4}).to eql(0)
+    end
+    it 'counts the elements that are equal to the parameter given' do
+      expect([1, 1, 2, 3, 5, 7, 1].my_count(1)).to eql(3)
+    end
+  end
 end
