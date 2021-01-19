@@ -14,6 +14,9 @@ describe Enumerable do
     it 'returns the range itself' do
       expect(range.my_each {|num| num}).to eql(range)
     end
+    it 'returns an enumerator if no block given' do
+      expect(arr.my_each.is_a?(Enumerator)).to eql(true)
+    end
   end
 
   describe '#my_each_with_index' do
@@ -26,18 +29,24 @@ describe Enumerable do
     it 'returns the range itself' do
       expect(range.my_each_with_index {|num, i| num}).to eql(range)
     end
+    it 'returns an enumerator if no block given' do
+      expect(arr.my_each_with_index.is_a?(Enumerator)).to eql(true)
+    end
   end
 
-  describe 'my_map' do
+  describe '#my_map' do
     it 'iterates through an array and returns the modified values' do
       expect(arr.my_map {|num| num + 1}).to eql([2, 3, 4])
     end
     it 'iterates through a range and returns the modified values' do
       expect(range.my_map {|num| num + 1}).to eql([2, 3, 4])
     end
+    it 'returns an enumerator if no block given' do
+      expect(arr.my_map.is_a?(Enumerator)).to eql(true)
+    end
   end
 
-  describe 'my_all?' do
+  describe '#my_all?' do
     it 'return true if all the elements are truthy' do
       expect(arr.my_all?).to eql(true)
     end
@@ -47,14 +56,71 @@ describe Enumerable do
     it 'return true if all the elements are of the given Class' do
       expect(arr.my_all?(Numeric)).to eql(true)
     end
-    it 'return true if all the elements containe the given RegEx' do
+    it 'return true if all the elements contains the given RegEx' do
       expect(%w[hey hello hi].my_all?(/h/)).to eql(true)
     end
-    it 'return true if all the elements are the equall to the given argument' do
+    it 'return true if all the elements are equal to the given argument' do
       expect([1, 1, 1, 1].my_all?(1)).to eql(true)
     end
     it 'return true if all the elements comply with the given block' do
       expect(arr.my_all?{|num| num > 0}).to eql(true)
+    end
+  end
+
+  describe '#my_any?' do
+    it 'return true if one of the elements are truthy' do
+      expect(arr.my_any?).to eql(true)
+    end
+    it 'return false if all the elements is falsy' do
+      expect([false, nil, false].my_any?).to eql(false)
+    end
+    it 'return true if one of the elements are of the given Class' do
+      expect(arr.my_any?(Numeric)).to eql(true)
+    end
+    it 'return true if one of the elements contains the given RegEx' do
+      expect(%w[hey belo hi].my_any?(/h/)).to eql(true)
+    end
+    it 'return true if one of the elements are equal to the given argument' do
+      expect([1, 6, 2, 8].my_any?(1)).to eql(true)
+    end
+    it 'return true if ome of the elements comply with the given block' do
+      expect(arr.my_any?{|num| num > 0}).to eql(true)
+    end
+  end
+
+  describe '#my_none?' do
+    it 'return true if all elements are falsy' do
+      expect(arr.my_none?).not_to eql(true)
+    end
+    it 'return false if all elements is truthy' do
+      expect([2, "love", true].my_none?).to eql(false)
+    end
+    it 'return true if none of the elements are of the given Class' do
+      expect(arr.my_none?(String)).to eql(true)
+    end
+    it 'return true if none of the elements contains the given RegEx' do
+      expect(%w[key belo bi].my_none?(/h/)).to eql(true)
+    end
+    it 'return true if none of the elements are equal to the given argument' do
+      expect([5, 6, 2, 8].my_none?(1)).to eql(true)
+    end
+    it 'return true if none of the elements comply with the given block' do
+      expect(arr.my_none?{|num| num > 4}).to eql(true)
+    end
+  end
+
+  describe '#my_select' do
+    it 'returns an array with the elements(Integers) that are true to the block given' do
+      expect(arr.my_select{|num| num < 3}).to eql([1, 2])
+    end
+    it 'returns an array with the elements(Strings) that are true to the block given' do
+      expect(%w[ p a t r i c k ].my_select{|num| num =~ /[sdlfua]/}).to eql(['a'])
+    end
+    it 'returns an empty array if the elements are false to the block given' do
+      expect(arr.my_select{|num| num > 4}).to eql([])
+    end
+    it 'returns an enumerator if no block given' do
+      expect(arr.my_select.is_a?(Enumerator)).to eql(true)
     end
   end
 end
