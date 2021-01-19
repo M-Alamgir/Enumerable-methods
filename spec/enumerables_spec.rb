@@ -1,9 +1,9 @@
 require_relative '../methods.rb'
 
 describe Enumerable do
-  let(:arr) {[1, 2, 3]}
-  let(:h) {{ one: 1, two: 2, three: 3, four: 4 }}
-  let(:range) {(1..3)}
+  let(:arr) { [1, 2, 3] }
+  let(:h) { { one: 1, two: 2, three: 3, four: 4 } }
+  let(:range) { (1..3) }
   describe '#my_each' do
     it 'returns the array itself' do
       expect(arr.my_each { |num| num }).to eql(arr)
@@ -63,7 +63,7 @@ describe Enumerable do
       expect([1, 1, 1, 1].my_all?(1)).to eql(true)
     end
     it 'return true if all the elements comply with the given block' do
-      expect(arr.my_all?{ |num| num > 0 }).to eql(true)
+      expect(arr.my_all? { |num| num > 0 }).to eql(true)
     end
   end
 
@@ -84,7 +84,7 @@ describe Enumerable do
       expect([1, 6, 2, 8].my_any?(1)).to eql(true)
     end
     it 'return true if ome of the elements comply with the given block' do
-      expect(arr.my_any?{ |num| num > 0 }).to eql(true)
+      expect(arr.my_any? { |num| num > 0 }).to eql(true)
     end
   end
 
@@ -105,19 +105,19 @@ describe Enumerable do
       expect([5, 6, 2, 8].my_none?(1)).to eql(true)
     end
     it 'return true if none of the elements comply with the given block' do
-      expect(arr.my_none?{ |num| num > 4 }).to eql(true)
+      expect(arr.my_none? { |num| num > 4 }).to eql(true)
     end
   end
 
   describe '#my_select' do
     it 'returns an array with the elements(Integers) that are true to the block given' do
-      expect(arr.my_select{ |num| num < 3 }).to eql([1, 2])
+      expect(arr.my_select { |num| num < 3 }).to eql([1, 2])
     end
     it 'returns an array with the elements(Strings) that are true to the block given' do
-      expect(%w[p a t r i c k].my_select{ |num| num =~ /[sdlfua]/ }).to eql(['a'])
+      expect(%w[p a t r i c k].my_select { |num| num =~ /[sdlfua]/ }).to eql(['a'])
     end
     it 'returns an empty array if the elements are false to the block given' do
-      expect(arr.my_select{ |num| num > 4 }).to eql([])
+      expect(arr.my_select { |num| num > 4 }).to eql([])
     end
     it 'returns an enumerator if no block given' do
       expect(arr.my_select.is_a?(Enumerator)).to eql(true)
@@ -129,10 +129,10 @@ describe Enumerable do
       expect(arr.my_count).to eql(3)
     end
     it 'counts the elements that are true to the block' do
-      expect(arr.my_count{ |num| num > 1 }).to eql(2)
+      expect(arr.my_count { |num| num > 1 }).to eql(2)
     end
     it 'returns 0 if no elements are true to the block' do
-      expect(arr.my_count{ |num| num > 4 }).to eql(0)
+      expect(arr.my_count { |num| num > 4 }).to eql(0)
     end
     it 'counts the elements that are equal to the parameter given' do
       expect([1, 1, 2, 3, 5, 7, 1].my_count(1)).to eql(3)
@@ -150,16 +150,16 @@ describe Enumerable do
       expect((5..10).my_inject(10, :+)).to eql(55)
     end
     it 'returns the result of the mathematical operation passed as a block' do
-      expect((1..5).my_inject{ |acc, num| acc + num }).to eql(15)
+      expect((1..5).my_inject { |acc, num| acc + num }).to eql(15)
     end
     it 'returns the result of the mathematical operation passed as a block while using an accumulator' do
-      expect((1..5).my_inject(10){ |acc, num| acc + num }).to eql(25)
+      expect((1..5).my_inject(10) { |acc, num| acc + num }).to eql(25)
     end
     it 'returns the longest string' do
-      expect(%w[cat mouse elephant dog].my_inject{ |acc, word| acc.length > word.length ? acc : word }).to eql('elephant')
+      expect(%w[cat mouse dog].my_inject { |acc, word| acc.length > word.length ? acc : word }).to eql('mouse')
     end
     it 'raises a LocalJump error if no block or symbol is given' do
-      expect{ arr.my_inject }.to raise_error(LocalJumpError)
+      expect { arr.my_inject }.to raise_error(LocalJumpError)
     end
   end
 end
